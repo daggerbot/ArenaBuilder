@@ -1,0 +1,8 @@
+[package]
+name = "gl"
+version = "0.0.0"
+edition = "2021"
+license = "MPL-2.0"
+
+[build-dependencies]
+gl_generator = "0.14.0"

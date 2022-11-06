@@ -1,0 +1,16 @@
+[package]
+name = "arena-builder"
+version = "1.0.0-main"
+edition = "2021"
+license = "MPL-2.0"
+
+[dependencies]
+clap = { version = "4.0.19", features = ["derive", "std"], default-features = false }
+cgmath = "0.18.0"
+gl = { path = "../gl" }
+log = { version = "0.4.17", features = ["release_max_level_info"] }
+regex = "1.7.0"
+rgb = "0.8.34"
+sdl2 = { git = "https://github.com/Rust-SDL2/rust-sdl2", rev = "ff004b6" }
+simple_logger = "4.0.0"
+zip = { version = "0.6.3", features = ["zstd"], default-features = false }
