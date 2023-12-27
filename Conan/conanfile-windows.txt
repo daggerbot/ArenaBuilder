@@ -1,0 +1,16 @@
+[generators]
+CMakeDeps
+
+[requires]
+fmt/10.1.1
+sdl/2.28.5
+
+[options]
+fmt/*:with_os_api=False
+
+sdl/*:iconv=False
+sdl/*:libunwind=False
+sdl/*:opengles=False
+sdl/*:sdl2main=False
+sdl/*:shared=True
+sdl/*:vulkan=False

@@ -1,0 +1,9 @@
+[generators]
+CMakeDeps
+
+[requires]
+fmt/10.1.1
+
+[options]
+fmt/*:fPIC=False
+fmt/*:with_os_api=False

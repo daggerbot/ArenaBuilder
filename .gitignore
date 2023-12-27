@@ -1,0 +1,10 @@
+# Ignore dotfiles unless otherwise specified
+.*
+!/.gitignore
+
+# Ignore CMake build directories
+/Build/
+/Build-*/
+/build/
+/build-*/
+/out/
