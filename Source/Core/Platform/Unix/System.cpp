@@ -28,3 +28,7 @@ void System::ExitWithErrorDialog(const oschar_t*)
 {
     exit(EXIT_FAILURE);
 }
+
+void System::InitErrorDialogHandler()
+{
+}

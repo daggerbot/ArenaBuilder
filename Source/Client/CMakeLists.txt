@@ -25,14 +25,7 @@ set_target_properties("ArenaClient" PROPERTIES
 target_link_libraries("ArenaClient"
     PRIVATE
         "ArenaCompilerOptions"
-        "ArenaCore"
+        "ArenaCoreGui"
         "ArenaGame"
         "SDL2::SDL2"
 )
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_sources("ArenaClient"
-        PRIVATE
-            "Platform/Windows/System.cpp"
-    )
-endif()

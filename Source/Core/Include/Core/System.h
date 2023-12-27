@@ -29,6 +29,11 @@ namespace ArenaBuilder {
         // exits with an error code.
         [[noreturn]] void ExitWithErrorDialog(const oschar_t* message);
 
+        // Changes the error dialog handler used by ExitWithErrorMessage() and
+        // ExitWithErrorDialog(). May be a no-op depending on the platform.
+        void InitErrorDialogHandler();
+        void SetErrorDialogHandler(void (*handler)(const oschar_t*));
+
     } // namespace System
 
 #ifdef _WIN32

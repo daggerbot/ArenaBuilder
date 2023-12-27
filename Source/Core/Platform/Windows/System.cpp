@@ -16,23 +16,39 @@
 #include <stdlib.h>
 #include <windows.h>
 
-#include <memory>
-
 #include <Core/System.h>
 
 using namespace std::literals::string_literals;
 using namespace ArenaBuilder;
 
-WEAK void System::ExitWithErrorMessage(const oschar_t* message)
+namespace {
+
+    void (*s_errorDialogHandler)(const oschar_t*) = nullptr;
+
+} // namespace
+
+void System::ExitWithErrorMessage(const oschar_t* message)
 {
-    fputws(message, stderr);
-    fflush(stderr);
+    if (s_errorDialogHandler) {
+        s_errorDialogHandler(message);
+    } else {
+        fputws(message, stderr);
+        fflush(stderr);
+    }
     ExitProcess(EXIT_FAILURE);
 }
 
-WEAK void System::ExitWithErrorDialog(const oschar_t*)
+void System::ExitWithErrorDialog(const oschar_t* message)
 {
+    if (s_errorDialogHandler) {
+        s_errorDialogHandler(message);
+    }
     ExitProcess(EXIT_FAILURE);
+}
+
+void System::SetErrorDialogHandler(void (*handler)(const oschar_t*))
+{
+    s_errorDialogHandler = handler;
 }
 
 //--------------------------------------------------------------------------------------------------

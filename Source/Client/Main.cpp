@@ -18,6 +18,7 @@
 
 #include <Core/CommandLine.h>
 #include <Core/Debug.h>
+#include <Core/System.h>
 
 #include "Client.h"
 
@@ -51,6 +52,7 @@ namespace {
 
     int ClientMain(int argc, const oschar_t* const argv[])
     {
+        System::InitErrorDialogHandler();
         Debug::InitLogger();
         HandleCommandLine(argc, argv);
 

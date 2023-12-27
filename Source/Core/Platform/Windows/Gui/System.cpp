@@ -12,13 +12,22 @@
  * under the License.
  */
 
-#ifndef ARENABUILDER_CORE_COMPILERDEFS_H_INCLUDED
-#define ARENABUILDER_CORE_COMPILERDEFS_H_INCLUDED
+#include <windows.h>
 
-#ifdef __GNUC__
-# define WEAK __attribute__((__weak__))
-#else
-# define WEAK
-#endif
+#include <Core/System.h>
 
-#endif // ARENABUILDER_CORE_COMPILERDEFS_H_INCLUDED
+using namespace ArenaBuilder;
+
+namespace {
+
+    void ShowErrorDialog(const oschar_t* message)
+    {
+        MessageBoxW(nullptr, message, L"Error", MB_OK | MB_ICONERROR);
+    }
+
+} // namespace
+
+void System::InitErrorDialogHandler()
+{
+    SetErrorDialogHandler(&ShowErrorDialog);
+}

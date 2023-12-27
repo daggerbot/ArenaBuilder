@@ -12,6 +12,9 @@
 
 find_package("fmt" "10.1.1...<11" REQUIRED)
 
+#---------------------------------------------------------------------------------------------------
+# ArenaCore
+
 add_library("ArenaCore" STATIC
     "CommandLine.cpp"
     "Debug.cpp"
@@ -49,4 +52,20 @@ elseif(UNIX AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     )
 else()
     message(FATAL_ERROR "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
+endif()
+
+#---------------------------------------------------------------------------------------------------
+# ArenaCoreGui
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    add_library("ArenaCoreGui" STATIC "Platform/Windows/Gui/System.cpp")
+
+    target_link_libraries("ArenaCoreGui"
+        PUBLIC
+            "ArenaCore"
+        PRIVATE
+            "ArenaCompilerOptions"
+    )
+else()
+    add_library("ArenaCoreGui" ALIAS "ArenaCore")
 endif()

@@ -20,8 +20,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "CompilerDefs.h"
-
 namespace ArenaBuilder {
 
     using nullptr_t = decltype(nullptr);
