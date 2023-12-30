@@ -15,7 +15,8 @@
 #include <SDL_video.h>
 
 #include <Core/Debug.h>
-#include <Game/GameDefs.h>
+#include <Core/GameDefs.h>
+#include <Render/GL/Version.h>
 
 #include "RenderWindow.h"
 
@@ -40,6 +41,9 @@ RenderWindow::RenderWindow()
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, RENDER_GL_MAJOR_VERSION);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, RENDER_GL_MINOR_VERSION);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     m_sdlWindow.reset(SDL_CreateWindow(
         GAME_TITLE,
@@ -77,6 +81,11 @@ Vec2i RenderWindow::GetClientSize() const
     Vec2i size{0, 0};
     SDL_GetWindowSize(m_sdlWindow.get(), &size.x, &size.y);
     return size;
+}
+
+void* RenderWindow::GetGlProcAddress(const char* name)
+{
+    return SDL_GL_GetProcAddress(name);
 }
 
 void RenderWindow::SwapBuffers()

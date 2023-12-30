@@ -26,39 +26,19 @@ using namespace ArenaBuilder;
 
 namespace {
 
-    class ClientCommandLineHandler : public CommandLineHandler {
-    public:
-        bool HandleOperand(OsStringView operand) override
-        {
-            FATAL("Unexpected operand: {}", operand);
-        }
-
-        bool HandleShortOption(oschar_t option, CommandLineParser&) override
-        {
-            FATAL("Invalid option: -{}", option);
-        }
-
-        bool HandleLongOption(OsStringView option, CommandLineParser&) override
-        {
-            FATAL("Invalid option: --{}", option);
-        }
-    };
-
-    void HandleCommandLine(int argc, const oschar_t* const* argv)
-    {
-        ClientCommandLineHandler handler;
-        CommandLineParser::Parse(argc, argv, handler);
-    }
-
     int ClientMain(int argc, const oschar_t* const argv[])
     {
         System::InitErrorDialogHandler();
         Debug::InitLogger();
-        HandleCommandLine(argc, argv);
 
-        LOG_INFO("Initializing...");
         Client client;
-        client.Initialize();
+
+        // Use a scope so we can release params when it's no longer needed.
+        {
+            auto params = ClientParams::FromCommandLine(argc, argv);
+            LOG_INFO("Initializing...");
+            client.Initialize(params);
+        }
 
         LOG_INFO("Game started!");
         client.Run();

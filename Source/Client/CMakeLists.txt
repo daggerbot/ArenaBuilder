@@ -26,6 +26,6 @@ target_link_libraries("ArenaClient"
     PRIVATE
         "ArenaCompilerOptions"
         "ArenaCoreGui"
-        "ArenaGame"
+        "ArenaRender"
         "SDL2::SDL2"
 )

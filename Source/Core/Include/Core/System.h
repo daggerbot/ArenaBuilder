@@ -30,7 +30,8 @@ namespace ArenaBuilder {
         [[noreturn]] void ExitWithErrorDialog(const oschar_t* message);
 
         // Changes the error dialog handler used by ExitWithErrorMessage() and
-        // ExitWithErrorDialog(). May be a no-op depending on the platform.
+        // ExitWithErrorDialog(). May be a no-op depending on the platform. These should be called
+        // as early as possible in the program, particularly before any threads are spawned.
         void InitErrorDialogHandler();
         void SetErrorDialogHandler(void (*handler)(const oschar_t*));
 

@@ -54,6 +54,49 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 #---------------------------------------------------------------------------------------------------
+# Set up Python venv (virtual environment)
+
+find_package("Python" "3.11.2...<4" REQUIRED)
+
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    set(EXE_SUFFIX ".exe")
+else()
+    set(EXE_SUFFIX "")
+endif()
+
+set(VENV_DIR "${CMAKE_CURRENT_BINARY_DIR}/venv")
+set(VENV_BINDIR "${VENV_DIR}/bin")
+set(VENV_PYTHON "${VENV_BINDIR}/python3${EXE_SUFFIX}")
+set(VENV_PIP "${VENV_BINDIR}/pip3${EXE_SUFFIX}")
+
+add_custom_command(
+    OUTPUT "${VENV_PYTHON}" "${VENV_PIP}"
+    COMMAND "${Python_EXECUTABLE}" "-m" "venv" "${VENV_DIR}")
+
+add_custom_target("venv" DEPENDS "${VENV_PYTHON}" "${VENV_PIP}")
+
+#---------------------------------------------------------------------------------------------------
 # Build components
 
 add_subdirectory("Source")
+add_subdirectory("Assets")
+
+#---------------------------------------------------------------------------------------------------
+# Test run
+
+set(RUN_COMMAND "" CACHE STRING "Command used to run the game executable (e.g. wine)")
+set(DEBUG_COMMAND "gdb" "--args" CACHE STRING "Command used to debug the game (e.g. gdb --args)")
+
+set(RUN_ARGS
+    "--data-dir=${BINDIR}"
+)
+
+add_custom_target("run"
+    COMMAND ${RUN_COMMAND} "$<TARGET_FILE:ArenaClient>" ${RUN_ARGS}
+    DEPENDS "ArenaClient"
+    USES_TERMINAL)
+
+add_custom_target("debug"
+    COMMAND ${DEBUG_COMMAND} "$<TARGET_FILE:ArenaClient>" ${RUN_ARGS}
+    DEPENDS "ArenaClient"
+    USES_TERMINAL)

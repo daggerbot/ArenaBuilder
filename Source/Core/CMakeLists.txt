@@ -16,8 +16,10 @@ find_package("fmt" "10.1.1...<11" REQUIRED)
 # ArenaCore
 
 add_library("ArenaCore" STATIC
+    "IO/Base.cpp"
     "CommandLine.cpp"
     "Debug.cpp"
+    "ServiceProvider.cpp"
 )
 
 target_include_directories("ArenaCore"
@@ -69,3 +71,17 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 else()
     add_library("ArenaCoreGui" ALIAS "ArenaCore")
 endif()
+
+#---------------------------------------------------------------------------------------------------
+# ZipCodec
+
+find_package("libzip" "1.10.1...<2" REQUIRED)
+add_library("ZipCodec" STATIC "IO/Codec/Zip.cpp")
+
+target_link_libraries("ZipCodec"
+    PUBLIC
+        "ArenaCore"
+    PRIVATE
+        "ArenaCompilerOptions"
+        "libzip::zip"
+)

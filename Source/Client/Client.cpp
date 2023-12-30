@@ -14,10 +14,56 @@
 
 #include <SDL_events.h>
 
+#include <Core/CommandLine.h>
+#include <Core/Debug.h>
+#include <Render/System.h>
+
 #include "Client.h"
 #include "RenderWindow.h"
 
 using namespace ArenaBuilder;
+
+namespace {
+
+    class ClientCommandLineHandler : public CommandLineHandler {
+    public:
+        ClientParams clientParams;
+
+        bool HandleOperand(OsStringView operand) override
+        {
+            FATAL("Unexpected operand: {}", operand);
+        }
+
+        bool HandleShortOption(oschar_t option, CommandLineParser&) override
+        {
+            FATAL("Invalid option: -{}", option);
+        }
+
+        bool HandleLongOption(OsStringView option, CommandLineParser& parser) override
+        {
+            if (option == OSSTR("data-dir")) {
+                auto param = parser.GetParam();
+                if (!param) {
+                    FATAL("Missing parameter for --data-dir");
+                }
+                clientParams.dataDir = param;
+                return true;
+            } else {
+                FATAL("Invalid option: --{}", option);
+            }
+        }
+    };
+
+} // namespace
+
+ClientParams ClientParams::FromCommandLine(int argc, const oschar_t* const* argv)
+{
+    ClientCommandLineHandler handler;
+    CommandLineParser::Parse(argc, argv, handler);
+    return std::move(handler.clientParams);
+}
+
+//--------------------------------------------------------------------------------------------------
 
 Client::Client()
 {
@@ -27,9 +73,10 @@ Client::~Client()
 {
 }
 
-void Client::Initialize()
+void Client::Initialize(const ClientParams&)
 {
     m_renderWindow = std::make_unique<RenderWindow>();
+    m_renderSystem = std::make_unique<RenderSystem>(*this);
 }
 
 void Client::Run()
@@ -46,7 +93,17 @@ void Client::Run()
 
 void Client::ShutDown()
 {
+    m_renderSystem.reset();
     m_renderWindow.reset();
+}
+
+void* Client::GetService(const std::type_info& type)
+{
+    if (type == typeid(GlLoader)) {
+        return static_cast<GlLoader*>(m_renderWindow.get());
+    } else {
+        return nullptr;
+    }
 }
 
 void Client::HandleSdlEvents()

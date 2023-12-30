@@ -39,6 +39,13 @@
 # define LOG_TRACE(...) do { ::ArenaBuilder::Debug::Internal::LogMessage(::ArenaBuilder::LogLevel::Trace, __FILE__, __LINE__, OSSTR("") __VA_ARGS__); } while (0)
 #endif
 
+// Assertion macros
+#ifdef NDEBUG
+# define ASSERT(x) do { if (!(x)) ::ArenaBuilder::Debug::Internal::LogFatalErrorAndExit(nullptr, 0, OSSTR("Assertion failed: {}"), #x); } while (0)
+#else
+# define ASSERT(x) do { if (!(x)) ::ArenaBuilder::Debug::Internal::LogFatalErrorAndExit(__FILE__, __LINE__, OSSTR("Assertion failed: {}"), #x); } while (0)
+#endif
+
 namespace ArenaBuilder {
 
     enum class LogLevel {
@@ -52,7 +59,11 @@ namespace ArenaBuilder {
 
     namespace Debug {
 
+        // Must be called before any messages are logged. Should be called as early as possible,
+        // particularly before any threads are spawned.
         void InitLogger();
+
+        // Changes the maximum log level. Level depends on whether build is debug or release.
         void EnableVerboseLogMessages();
 
         namespace Internal {

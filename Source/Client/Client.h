@@ -17,16 +17,25 @@
 
 #include <memory>
 
-#include <Core/Types.h>
+#include <Core/ServiceProvider.h>
 
 union SDL_Event;
 struct SDL_WindowEvent;
 
 namespace ArenaBuilder {
 
+    class RenderSystem;
     class RenderWindow;
 
-    class Client {
+    // Used when initializing a Client.
+    struct ClientParams {
+        OsString dataDir;
+
+        static ClientParams FromCommandLine(int argc, const oschar_t* const* argv);
+    };
+
+    // Encapsulates the global state of the client application.
+    class Client : public ServiceProvider {
     public:
         Client();
         Client(const Client&) = delete;
@@ -34,8 +43,9 @@ namespace ArenaBuilder {
         ~Client();
 
         RenderWindow* GetRenderWindow() { return m_renderWindow.get(); }
+        RenderSystem* GetRenderSystem() { return m_renderSystem.get(); }
 
-        void Initialize();
+        void Initialize(const ClientParams& params);
         void Run();
         void ShutDown();
 
@@ -45,8 +55,12 @@ namespace ArenaBuilder {
         Client& operator=(const Client&) = delete;
         Client& operator=(Client&&) = delete;
 
+    protected:
+        void* GetService(const std::type_info& type) override;
+
     private:
         std::unique_ptr<RenderWindow> m_renderWindow;
+        std::unique_ptr<RenderSystem> m_renderSystem;
 
         bool m_quitRequested = false;
 

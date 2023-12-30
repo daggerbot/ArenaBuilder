@@ -18,13 +18,14 @@
 #include <memory>
 
 #include <Core/Math/Vec.h>
+#include <Render/GL/Loader.h>
 
 struct SDL_Window;
 
 namespace ArenaBuilder {
 
     // SDL window wrapper.
-    class RenderWindow {
+    class RenderWindow : public GlLoader {
     public:
         RenderWindow();
         RenderWindow(const RenderWindow&) = delete;
@@ -32,7 +33,7 @@ namespace ArenaBuilder {
         ~RenderWindow();
 
         Vec2i GetClientSize() const;
-
+        void* GetGlProcAddress(const char* name) override;
         void SwapBuffers();
 
         RenderWindow& operator=(const RenderWindow&) = delete;

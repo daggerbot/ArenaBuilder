@@ -9,7 +9,3 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-
-add_library("ArenaGame" INTERFACE)
-target_include_directories("ArenaGame" INTERFACE "Include")
-target_link_libraries("ArenaGame" INTERFACE "ArenaCore")

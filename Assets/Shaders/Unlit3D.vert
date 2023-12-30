@@ -12,13 +12,22 @@
  * under the License.
  */
 
-#ifndef ARENABUILDER_GAME_GAMEDEFS_H_INCLUDED
-#define ARENABUILDER_GAME_GAMEDEFS_H_INCLUDED
+#version 330 core
 
-#include <Core/Types.h>
+uniform mat4 u_ProjectionMatrix;
+uniform mat4 u_ViewMatrix;
+uniform mat4 u_ModelMatrix;
 
-#define GAME_TITLE "ArenaBuilder"
-#define GAME_UNIX_NAME "arenabuilder"
-#define GAME_UPPERCASE_NAME "ARENABUILDER"
+in vec3 a_Position;
+in vec2 a_TexCoord;
+in vec3 a_Color;
 
-#endif // ARENABUILDER_GAME_GAMEDEFS_H_INCLUDED
+out vec2 v_TexCoord;
+out vec4 v_Color;
+
+void main()
+{
+    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+    v_TexCoord = a_TexCoord;
+    v_Color = vec4(a_Color, 1.0);
+}
